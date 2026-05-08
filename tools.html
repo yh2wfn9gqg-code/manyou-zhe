@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具库 - 发现和对比最好的AI工具</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f97316;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --dark-lighter: #334155;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #f97316 100%);
+            --gradient-soft: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.7;
+        }
+        
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 1000;
+            padding: 0.75rem 2rem;
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--white);
+            background: var(--gradient-soft);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-soft);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        /* Compare Section */
+        .compare-section {
+            background: var(--dark-light);
+            border-radius: 16px;
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 1.5rem;
+        }
+        
+        .compare-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .compare-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .compare-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--dark-lighter);
+            color: var(--light);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+        
+        /* Compare Cards */
+        .compare-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        .compare-card {
+            background: var(--dark);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .compare-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .compare-card .tool-select-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--dark-lighter);
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .compare-card .tool-select-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .compare-card .tool-info {
+            display: none;
+        }
+        
+        .compare-card.has-tool .tool-select-btn {
+            display: none;
+        }
+        
+        .compare-card.has-tool .tool-info {
+            display: block;
+        }
+        
+        .tool-info-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-soft);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .tool-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .tool-category {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+        
+        .tool-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stars {
+            color: #fbbf24;
+        }
+        
+        .rating-number {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .rating-count {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+        
+        .tool-price {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .price-tag {
+            background: var(--gradient-soft);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .price-tag.free { color: var(--success); }
+        .price-tag.paid { color: var(--secondary); }
+        
+        .tool-features {
+            margin-bottom: 1rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.875rem;
+        }
+        
+        .feature-item::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .remove-tool {
+            width: 100%;
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            margin-top: 0.75rem;
+        }
+        
+        .remove-tool:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .comparison-table th {
+            background: var(--dark-lighter);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .comparison-table th:first-child {
+            text-align: left;
+            width: 150px;
+        }
+        
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--gray);
+        }
+        
+        .highlight-cell {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .best-badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            background: var(--success);
+            color: var(--white);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        /* Categories */
+        .categories-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .categories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .categories-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            padding: 0.5rem 1rem;
+            background: var(--dark-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .category-tab:hover, .category-tab.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+        
+        .category-count {
+            margin-left: 0.25rem;
+            opacity: 0.7;
+        }
+        
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+        
+        .tool-card {
+            background: var(--dark-light);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .tool-card-header {
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .tool-card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-soft);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+        
+        .tool-card-info {
+            flex: 1;
+        }
+        
+        .tool-card-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+        
+        .badge {
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .badge-hot { background: rgba(249, 115, 22, 0.2); color: var(--secondary); }
+        .badge-new { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge-free { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge-recommended { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+        
+        .tool-card-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .tool-card-category {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .tool-card-body {
+            padding: 0 1.25rem 1.25rem;
+        }
+        
+        .tool-card-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .tool-card-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .stat-item .stars { font-size: 0.8rem; }
+        
+        .tool-card-footer {
+            padding: 1rem 1.25rem;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tool-card-price {
+            font-weight: 600;
+        }
+        
+        .tool-card-price.free { color: var(--success); }
+        .tool-card-price.paid { color: var(--secondary); }
+        
+        .tool-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tool-card-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-compare {
+            background: var(--dark-lighter);
+            color: var(--light);
+        }
+        
+        .btn-compare:hover {
+            background: var(--primary);
+        }
+        
+        .btn-compare.selected {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .btn-visit {
+            background: var(--gradient);
+            color: var(--white);
+        }
+        
+        .btn-visit:hover {
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Tool Selector Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--dark-light);
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .modal-close:hover {
+            color: var(--white);
+        }
+        
+        .modal-search {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-search input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .modal-search input:focus {
+            border-color: var(--primary);
+        }
+        
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .modal-tool-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .modal-tool-item {
+            padding: 1rem;
+            background: var(--dark);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .modal-tool-item:hover {
+            background: var(--dark-lighter);
+        }
+        
+        .modal-tool-item.selected {
+            background: var(--primary);
+        }
+        
+        .modal-tool-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-soft);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .modal-tool-info {
+            flex: 1;
+        }
+        
+        .modal-tool-name {
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+        
+        .modal-tool-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 3rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .compare-container { grid-template-columns: 1fr; }
+            .comparison-table { font-size: 0.8rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.5rem; }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tool-card {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .tool-card:nth-child(2) { animation-delay: 0.05s; }
+        .tool-card:nth-child(3) { animation-delay: 0.1s; }
+        .tool-card:nth-child(4) { animation-delay: 0.15s; }
+        .tool-card:nth-child(5) { animation-delay: 0.2s; }
+        .tool-card:nth-child(6) { animation-delay: 0.25s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="index.html" class="logo">🤖 AI工具库</a>
+            <div class="nav-links">
+                <a href="#" class="active">工具库</a>
+                <a href="#" onclick="scrollToCompare()">工具对比</a>
+                <a href="#">排行榜</a>
+                <a href="#">教程</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <h1>发现最好的<span>AI工具</span></h1>
+        <p>收录50+主流AI工具，支持对比功能，帮你找到最适合的AI助手</p>
+        <button class="btn btn-primary" onclick="scrollToCompare()">🆚 开始对比</button>
+    </section>
+    
+    <!-- Compare Section -->
+    <section class="compare-section" id="compare">
+        <div class="compare-header">
+            <div class="compare-title">🆚 工具对比区（选择2-3个工具对比）</div>
+            <div class="compare-actions">
+                <button class="btn btn-secondary" onclick="clearComparison()">清空对比</button>
+                <button class="btn btn-primary" onclick="generateComparison()">生成对比表</button>
+            </div>
+        </div>
+        <div class="compare-container" id="compareContainer">
+            <div class="compare-card" data-slot="0">
+                <button class="tool-select-btn" onclick="openToolSelector(0)">➕ 点击选择工具</button>
+                <div class="tool-info"></div>
+            </div>
+            <div class="compare-card" data-slot="1">
+                <button class="tool-select-btn" onclick="openToolSelector(1)">➕ 点击选择工具</button>
+                <div class="tool-info"></div>
+            </div>
+            <div class="compare-card" data-slot="2">
+                <button class="tool-select-btn" onclick="openToolSelector(2)">➕ 点击选择工具</button>
+                <div class="tool-info"></div>
+            </div>
+        </div>
+        <div id="comparisonResult"></div>
+    </section>
+    
+    <!-- Categories -->
+    <section class="categories-section">
+        <div class="categories-header">
+            <h2 class="categories-title">📦 全部工具</h2>
+            <div class="category-tabs" id="categoryTabs"></div>
+        </div>
+        <div class="tools-grid" id="toolsGrid"></div>
+    </section>
+    
+    <!-- Tool Selector Modal -->
+    <div class="modal-overlay" id="toolModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">选择工具</span>
+                <button class="modal-close" onclick="closeToolSelector()">×</button>
+            </div>
+            <div class="modal-search">
+                <input type="text" id="toolSearch" placeholder="搜索工具名称..." oninput="filterTools()">
+            </div>
+            <div class="modal-body">
+                <div class="modal-tool-list" id="modalToolList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 AI工具库 - 帮你找到最好的AI工具</p>
+    </footer>
+
+    <script src="js/tools-data.js"></script>
+    <script>
+        // State
+        let selectedCategory = 'all';
+        let comparisonTools = [null, null, null];
+        let currentSlot = 0;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderTools();
+        });
+        
+        // Render categories
+        function renderCategories() {
+            const container = document.getElementById('categoryTabs');
+            container.innerHTML = CATEGORIES.map(cat => `
+                <button class="category-tab ${cat.id === selectedCategory ? 'active' : ''}" onclick="setCategory('${cat.id}')">
+                    ${cat.icon} ${cat.name} <span class="category-count">${cat.count}</span>
+                </button>
+            `).join('');
+        }
+        
+        // Set category
+        function setCategory(catId) {
+            selectedCategory = catId;
+            renderCategories();
+            renderTools();
+        }
+        
+        // Render tools
+        function renderTools() {
+            const filtered = selectedCategory === 'all' 
+                ? AI_TOOLS 
+                : AI_TOOLS.filter(t => t.category === selectedCategory);
+            
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = filtered.map(tool => `
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-card-icon">${tool.icon}</div>
+                        <div class="tool-card-info">
+                            <div class="tool-card-badges">
+                                ${tool.isHot ? '<span class="badge badge-hot">🔥 热门</span>' : ''}
+                                ${tool.isNew ? '<span class="badge badge-new">🆕 新</span>' : ''}
+                                ${tool.isFree ? '<span class="badge badge-free">🆓 免费</span>' : ''}
+                                ${tool.isRecommended ? '<span class="badge badge-recommended">⭐ 推荐</span>' : ''}
+                            </div>
+                            <div class="tool-card-name">${tool.name}</div>
+                            <div class="tool-card-category">${tool.categoryName}</div>
+                        </div>
+                    </div>
+                    <div class="tool-card-body">
+                        <p class="tool-card-desc">${tool.description}</p>
+                        <div class="tool-card-stats">
+                            <div class="stat-item">
+                                <span class="stars">★★★★★</span>
+                                <span>${tool.rating}</span>
+                            </div>
+                            <div class="stat-item">👥 ${(tool.reviews/1000).toFixed(1)}K人评价</div>
+                        </div>
+                    </div>
+                    <div class="tool-card-footer">
+                        <div class="tool-card-price ${tool.priceLevel === 0 ? 'free' : 'paid'}">
+                            ${tool.price}
+                        </div>
+                        <div class="tool-card-actions">
+                            <button class="tool-card-btn btn-compare ${isInComparison(tool.id) ? 'selected' : ''}" onclick="toggleComparison(${tool.id})">
+                                ${isInComparison(tool.id) ? '✓ 已添加' : '+ 对比'}
+                            </button>
+                            <a href="${tool.url}" target="_blank" class="tool-card-btn btn-visit">访问 →</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Check if tool is in comparison
+        function isInComparison(toolId) {
+            return comparisonTools.includes(toolId);
+        }
+        
+        // Toggle comparison
+        function toggleComparison(toolId) {
+            const emptySlot = comparisonTools.indexOf(null);
+            if (emptySlot !== -1 && !isInComparison(toolId)) {
+                comparisonTools[emptySlot] = toolId;
+                updateComparisonUI();
+                renderTools();
+            }
+        }
+        
+        // Update comparison UI
+        function updateComparisonUI() {
+            const container = document.getElementById('compareContainer');
+            container.querySelectorAll('.compare-card').forEach((card, index) => {
+                const toolId = comparisonTools[index];
+                const infoDiv = card.querySelector('.tool-info');
+                
+                if (toolId) {
+                    const tool = AI_TOOLS.find(t => t.id === toolId);
+                    card.classList.add('has-tool');
+                    card.classList.add('selected');
+                    infoDiv.innerHTML = `
+                        <div class="tool-info-header">
+                            <div class="tool-icon">${tool.icon}</div>
+                            <div>
+                                <div class="tool-name">${tool.name}</div>
+                                <div class="tool-category">${tool.categoryName}</div>
+                            </div>
+                        </div>
+                        <div class="tool-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-number">${tool.rating}</span>
+                            <span class="rating-count">(${tool.reviews}条评价)</span>
+                        </div>
+                        <div class="tool-price">
+                            <span class="price-tag ${tool.priceLevel === 0 ? 'free' : 'paid'}">${tool.price}</span>
+                        </div>
+                        <div class="tool-features">
+                            ${tool.features.slice(0, 4).map(f => `<div class="feature-item">${f}</div>`).join('')}
+                        </div>
+                        <button class="remove-tool" onclick="removeFromComparison(${index})">移除</button>
+                    `;
+                } else {
+                    card.classList.remove('has-tool');
+                    card.classList.remove('selected');
+                    infoDiv.innerHTML = '';
+                }
+            });
+        }
+        
+        // Remove from comparison
+        function removeFromComparison(index) {
+            comparisonTools[index] = null;
+            updateComparisonUI();
+            renderTools();
+        }
+        
+        // Clear comparison
+        function clearComparison() {
+            comparisonTools = [null, null, null];
+            updateComparisonUI();
+            renderTools();
+            document.getElementById('comparisonResult').innerHTML = '';
+        }
+        
+        // Open tool selector
+        function openToolSelector(slot) {
+            currentSlot = slot;
+            const modal = document.getElementById('toolModal');
+            const list = document.getElementById('modalToolList');
+            
+            list.innerHTML = AI_TOOLS.map(tool => `
+                <div class="modal-tool-item ${tool.id === comparisonTools[currentSlot] ? 'selected' : ''}" onclick="selectToolForSlot(${tool.id})">
+                    <div class="modal-tool-icon">${tool.icon}</div>
+                    <div class="modal-tool-info">
+                        <div class="modal-tool-name">${tool.name}</div>
+                        <div class="modal-tool-desc">${tool.shortDesc}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+        }
+        
+        // Close tool selector
+        function closeToolSelector() {
+            document.getElementById('toolModal').classList.remove('active');
+        }
+        
+        // Select tool for slot
+        function selectToolForSlot(toolId) {
+            comparisonTools[currentSlot] = toolId;
+            closeToolSelector();
+            updateComparisonUI();
+            renderTools();
+        }
+        
+        // Filter tools in modal
+        function filterTools() {
+            const query = document.getElementById('toolSearch').value.toLowerCase();
+            const list = document.getElementById('modalToolList');
+            
+            list.innerHTML = AI_TOOLS
+                .filter(tool => tool.name.toLowerCase().includes(query) || tool.description.toLowerCase().includes(query))
+                .map(tool => `
+                    <div class="modal-tool-item ${tool.id === comparisonTools[currentSlot] ? 'selected' : ''}" onclick="selectToolForSlot(${tool.id})">
+                        <div class="modal-tool-icon">${tool.icon}</div>
+                        <div class="modal-tool-info">
+                            <div class="modal-tool-name">${tool.name}</div>
+                            <div class="modal-tool-desc">${tool.shortDesc}</div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+        
+        // Generate comparison table
+        function generateComparison() {
+            const tools = comparisonTools.filter(id => id !== null).map(id => AI_TOOLS.find(t => t.id === id));
+            
+            if (tools.length < 2) {
+                alert('请至少选择2个工具进行对比');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('comparisonResult');
+            
+            let html = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>对比项</th>
+                            ${tools.map(t => `<th>${t.name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>图标</td>
+                            ${tools.map(t => `<td>${t.icon}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>分类</td>
+                            ${tools.map(t => `<td>${t.categoryName}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>评分</td>
+                            ${tools.map(t => `<td class="${t.rating === Math.max(...tools.map(x => x.rating)) ? 'highlight-cell' : ''}">⭐ ${t.rating}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>价格</td>
+                            ${tools.map(t => `<td class="${t.priceLevel === 0 ? 'highlight-cell' : ''}">${t.price}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>免费</td>
+                            ${tools.map(t => `<td class="${t.isFree ? 'highlight-cell' : ''}">${t.isFree ? '✓' : '✗'}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>主要功能</td>
+                            ${tools.map(t => `<td>${t.features.slice(0, 3).join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>优势</td>
+                            ${tools.map(t => `<td>${t.pros.slice(0, 2).join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>劣势</td>
+                            ${tools.map(t => `<td>${t.cons.slice(0, 2).join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>适合人群</td>
+                            ${tools.map(t => `<td>${t.tags.join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>操作</td>
+                            ${tools.map(t => `<td><a href="${t.url}" target="_blank" class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.8rem;">访问官网</a></td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            resultDiv.innerHTML = html;
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Scroll to compare
+        function scrollToCompare() {
+            document.getElementById('compare').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

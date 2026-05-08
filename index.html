@@ -1,14 +1,675 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/src/index.css" rel="stylesheet" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI浪潮 - 探索人工智能的无限可能</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f97316;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #f97316 100%);
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--white);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--gray);
+            color: var(--light);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Featured Section */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .section-header p {
+            color: var(--gray);
+        }
+        
+        /* Article Cards */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .article-card {
+            background: var(--dark-light);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .article-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .article-image {
+            height: 200px;
+            background: var(--gradient);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .article-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.375rem 0.75rem;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .category-tool { color: #f97316; }
+        .category-tutorial { color: #22c55e; }
+        .category-news { color: #3b82f6; }
+        .category-analysis { color: #a855f7; }
+        
+        .article-content {
+            padding: 1.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+        }
+        
+        .article-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .article-title a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .article-title a:hover {
+            color: var(--primary);
+        }
+        
+        .article-excerpt {
+            color: var(--gray);
+            font-size: 0.9375rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .read-more:hover {
+            gap: 0.5rem;
+        }
+        
+        .article-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            background: var(--dark-light);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 3rem auto;
+            max-width: 1200px;
+        }
+        
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient);
+            opacity: 0.1;
+        }
+        
+        .newsletter-content {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .newsletter h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .newsletter p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.875rem 1.25rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            background: var(--dark);
+            color: var(--light);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .newsletter-form input:focus {
+            border-color: var(--primary);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-light);
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-content, .article-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .article-card:nth-child(2) { animation-delay: 0.1s; }
+        .article-card:nth-child(3) { animation-delay: 0.2s; }
+        .article-card:nth-child(4) { animation-delay: 0.3s; }
+        .article-card:nth-child(5) { animation-delay: 0.4s; }
+        .article-card:nth-child(6) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">AI浪潮</div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">首页</a></li>
+            <li><a href="#tools">工具评测</a></li>
+            <li><a href="#tutorials">教程技巧</a></li>
+            <li><a href="#news">行业资讯</a></li>
+            <li><a href="#analysis">深度分析</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🚀 探索AI的无限可能</span>
+            <h1>让<span>人工智能</span>成为你的超级助手</h1>
+            <p>深入浅出的AI工具评测、实战教程、行业洞察，陪你一起探索AI时代的机遇与可能</p>
+            <div class="hero-buttons">
+                <a href="#articles" class="btn btn-primary">开始探索</a>
+                <a href="#newsletter" class="btn btn-secondary">订阅更新</a>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">深度文章</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">读者用户</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">工具评测</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Articles -->
+    <section class="section" id="articles">
+        <div class="section-header">
+            <h2>最新文章</h2>
+            <p>精选AI领域最实用的内容</p>
+        </div>
+        
+        <div class="articles-grid" id="articlesGrid">
+            <!-- Articles will be loaded here -->
+        </div>
+    </section>
+    
+    <!-- Newsletter -->
+    <section class="newsletter" id="newsletter">
+        <div class="newsletter-content">
+            <h2>📬 订阅 Newsletter</h2>
+            <p>每周精选3篇高质量AI内容，干货满满，告别信息焦虑</p>
+            <form class="newsletter-form" onsubmit="return false;">
+                <input type="email" placeholder="输入你的邮箱地址" />
+                <button type="submit" class="btn btn-primary">立即订阅</button>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo">AI浪潮</div>
+            <ul class="footer-links">
+                <li><a href="#">关于我们</a></li>
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">隐私政策</a></li>
+                <li><a href="#">用户协议</a></li>
+            </ul>
+            <div class="copyright">© 2024 AI浪潮. 保留所有权利.</div>
+        </div>
+    </footer>
+    
+    <script>
+        // Articles data
+        const articles = [
+            {
+                id: 1,
+                title: "15个ChatGPT高级用法，让你的效率翻10倍",
+                excerpt: "很多人用ChatGPT只是简单的问答，但如果你掌握了这15个高级用法，你会发现它简直是一个全能助手...",
+                category: "tutorial",
+                categoryName: "教程",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162881_6d71bb76.png",
+                date: "2024-01-15",
+                views: 12580,
+                likes: 892
+            },
+            {
+                id: 2,
+                title: "ChatGPT Plus vs Claude Pro：哪个更值得买？",
+                excerpt: "作为目前最火的两款AI助手，ChatGPT Plus和Claude Pro各有优劣。今天我们从多个维度进行深度对比...",
+                category: "tool",
+                categoryName: "工具评测",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162439_723e87a2.png",
+                date: "2024-01-14",
+                views: 15890,
+                likes: 1243
+            },
+            {
+                id: 3,
+                title: "2024年最值得尝试的10个AI写作工具",
+                excerpt: "AI写作工具层出不穷，本文精选10款经过实测的工具，从功能、价格、适用场景等维度进行全方位对比...",
+                category: "tool",
+                categoryName: "工具评测",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162469_4ba051fc.png",
+                date: "2024-01-13",
+                views: 25670,
+                likes: 2156
+            },
+            {
+                id: 4,
+                title: "Sora来了！OpenAI视频生成工具实测",
+                excerpt: "OpenAI最新发布的Sora震惊了整个AI圈，能够根据文字描述生成长达60秒的高清视频，实测效果如何？",
+                category: "news",
+                categoryName: "行业资讯",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162839_d357b64a.png",
+                date: "2024-01-12",
+                views: 18940,
+                likes: 1567
+            },
+            {
+                id: 5,
+                title: "AI会不会取代你的工作？这是我的答案",
+                excerpt: "随着AI技术的快速发展，很多人都开始焦虑自己的工作会不会被取代。本文从多个角度深度分析这个问题...",
+                category: "analysis",
+                categoryName: "深度分析",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162546_0446eb71.png",
+                date: "2024-01-11",
+                views: 31250,
+                likes: 3456
+            },
+            {
+                id: 6,
+                title: "Midjourney V6完全教程：从注册到出图",
+                excerpt: "Midjourney V6版本带来了革命性升级，本文提供从注册账号到生成商业级图片的完整教程...",
+                category: "tutorial",
+                categoryName: "教程技巧",
+                image: "https://cdn.hailuoai.com/mcp/image_tool/output/507220091150934024/394208909021796/1778162410_32658ede.png",
+                date: "2024-01-10",
+                views: 9870,
+                likes: 756
+            }
+        ];
+        
+        // Render articles
+        function renderArticles() {
+            const grid = document.getElementById('articlesGrid');
+            grid.innerHTML = articles.map(article => `
+                <article class="article-card">
+                    <div class="article-image">
+                        <img src="${article.image}" alt="${article.title}" loading="lazy">
+                        <span class="article-category category-${article.category}">${article.categoryName}</span>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span>${article.date}</span>
+                        </div>
+                        <h3 class="article-title">
+                            <a href="#">${article.title}</a>
+                        </h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-footer">
+                            <a href="#" class="read-more">阅读全文 →</a>
+                            <div class="article-stats">
+                                <span>👁 ${article.views}</span>
+                                <span>❤️ ${article.likes}</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', renderArticles);
+    </script>
+</body>
 </html>
